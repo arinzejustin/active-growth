@@ -131,7 +131,7 @@ const faqItems = [
 
 useScrollReveal()
 
-const siteUrl = 'https://activegrowthgroups.my.canva.site/'
+const siteUrl = 'https://active-growth.netlify.app/'
 const pageTitle = 'Active Growth Groups | Youth Empowerment and Community Development'
 const pageDescription =
   'Active Growth Groups supports youth empowerment and community development through mentorship, workshops, support networks, and practical growth resources.'

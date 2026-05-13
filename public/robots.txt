@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://activegrowthgroups.my.canva.site/sitemap.xml
+Sitemap: https://active-growth.netlify.app/sitemap.xml

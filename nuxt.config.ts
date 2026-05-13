@@ -33,8 +33,8 @@ export default defineNuxtConfig({
           content:
             'A modern nonprofit landing page for Active Growth Groups focused on youth empowerment, community development, and practical support programs.',
         },
-        { property: 'og:url', content: 'https://activegrowthgroups.my.canva.site/' },
-        { property: 'og:image', content: 'https://activegrowthgroups.my.canva.site/favicon.svg' },
+        { property: 'og:url', content: 'https://active-growth.netlify.app/' },
+        { property: 'og:image', content: 'https://active-growth.netlify.app/favicon.svg' },
         { property: 'og:image:type', content: 'image/svg+xml' },
         { name: 'twitter:card', content: 'summary' },
         { name: 'twitter:title', content: 'Active Growth Groups' },
@@ -43,12 +43,12 @@ export default defineNuxtConfig({
           content:
             'A modern nonprofit landing page for Active Growth Groups focused on youth empowerment, community development, and practical support programs.',
         },
-        { name: 'twitter:image', content: '/favicon.svg' },
+        { name: 'twitter:image', content: 'https://active-growth.netlify.app/favicon.svg' },
       ],
       link: [
         {
           rel: 'canonical',
-          href: 'https://activegrowthgroups.my.canva.site/',
+          href: 'https://active-growth.netlify.app/',
         },
         {
           rel: 'icon',
