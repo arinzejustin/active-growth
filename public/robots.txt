@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://activegrowthgroups.my.canva.site/sitemap.xml

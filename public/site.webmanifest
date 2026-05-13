@@ -1,0 +1,17 @@
+{
+  "name": "Active Growth Groups",
+  "short_name": "Active Growth",
+  "description": "Youth empowerment, community development, and practical support programs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5fbf6",
+  "theme_color": "#2f9e44",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

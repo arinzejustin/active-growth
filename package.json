@@ -1,0 +1,20 @@
+{
+  "name": "active-growth",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.13.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "nuxt": "^3.16.2"
+  }
+}

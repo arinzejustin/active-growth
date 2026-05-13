@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --canvas: 0.981 0.004 95;
+    --surface: 0.965 0.005 95;
+    --surface-strong: 0.99 0.002 95;
+    --line: 0.88 0.012 250;
+    --ink: 0.26 0.028 248;
+    --muted: 0.5 0.02 250;
+    --accent: 0.72 0.16 142;
+    --accent-soft: 0.9 0.05 142;
+    --accent-strong: 0.64 0.17 142;
+    --aurora: 0.79 0.12 108;
+    --aurora-soft: 0.9 0.05 108;
+    --lime: 0.78 0.15 128;
+    --lime-soft: 0.9 0.06 128;
+    --font-heading: "Nunito Sans", sans-serif;
+    --font-body: "PT Sans", sans-serif;
+  }
+
+  html.dark {
+    color-scheme: dark;
+    --canvas: 0.14 0.004 260;
+    --surface: 0.18 0.005 260;
+    --surface-strong: 0.22 0.006 260;
+    --line: 0.3 0.01 260;
+    --ink: 0.97 0.003 95;
+    --muted: 0.72 0.01 260;
+    --accent: 0.78 0.17 142;
+    --accent-soft: 0.28 0.045 142;
+    --accent-strong: 0.84 0.18 142;
+    --aurora: 0.82 0.12 110;
+    --aurora-soft: 0.25 0.035 110;
+    --lime: 0.84 0.16 130;
+    --lime-soft: 0.3 0.05 130;
+  }
+
+  * {
+    @apply border-line;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  html,
+  body,
+  #__nuxt {
+    @apply min-h-screen;
+  }
+
+  body {
+    @apply bg-canvas text-ink font-sans antialiased transition-colors duration-300;
+    background-image:
+      radial-gradient(circle at top left, color-mix(in oklab, oklch(var(--accent) / 0.14), transparent 72%), transparent 28%),
+      radial-gradient(circle at 80% 10%, color-mix(in oklab, oklch(var(--aurora) / 0.14), transparent 78%), transparent 25%),
+      linear-gradient(180deg, oklch(var(--canvas)) 0%, color-mix(in oklab, oklch(var(--canvas)), black 3%) 100%);
+  }
+
+  html.dark body {
+    background-image:
+      radial-gradient(circle at 18% 12%, rgba(63, 196, 114, 0.14), transparent 24%),
+      radial-gradient(circle at 82% 8%, rgba(166, 193, 61, 0.12), transparent 20%),
+      linear-gradient(180deg, #050505 0%, #090909 45%, #0d0d0d 100%);
+  }
+
+  ::selection {
+    @apply bg-accent/20 text-ink;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  b,
+  strong {
+    @apply tracking-tighter;
+    font-family: var(--font-heading);
+  }
+
+  p,
+  span,
+  a,
+  li,
+  blockquote,
+  input,
+  textarea,
+  select,
+  button,
+  small,
+  img {
+    font-family: var(--font-body);
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-space {
+    @apply py-20 sm:py-24 lg:py-28;
+  }
+
+  .surface-card {
+    @apply rounded-3xl border border-line/60 bg-surface/70 shadow-panel backdrop-blur-xl;
+  }
+
+  .interactive-card {
+    @apply transition duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-halo;
+  }
+
+  .section-kicker {
+    @apply text-[0.72rem] font-extrabold uppercase tracking-[0.28em] text-accent;
+  }
+
+  .section-title {
+    @apply font-display text-4xl font-semibold tracking-[-0.05em] text-ink sm:text-5xl lg:text-6xl;
+  }
+
+  .section-body {
+    @apply max-w-2xl text-base leading-8 text-muted sm:text-lg;
+  }
+
+  .action-button {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-bold transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas hover:-translate-y-0.5;
+  }
+
+  .accent-frame {
+    @apply relative overflow-hidden;
+  }
+
+  .accent-frame::before {
+    content: '';
+    @apply absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent;
+  }
+
+  .metric-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-line/60 bg-surfaceStrong/70 px-3 py-2 text-xs font-semibold text-muted;
+  }
+
+  .reveal {
+    @apply opacity-0 transition-all duration-700;
+    will-change: transform, opacity;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translate3d(0, 28px, 0) scale(0.985);
+  }
+
+  .reveal-left {
+    transform: translate3d(-36px, 18px, 0) scale(0.985);
+  }
+
+  .reveal-right {
+    transform: translate3d(36px, 18px, 0) scale(0.985);
+  }
+
+  .reveal-scale {
+    transform: translate3d(0, 20px, 0) scale(0.94);
+  }
+
+  .reveal-soft {
+    transform: translate3d(0, 18px, 0) scale(0.995);
+  }
+
+  .reveal.is-visible {
+    @apply opacity-100;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
