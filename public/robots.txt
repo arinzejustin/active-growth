@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://active-growth.netlify.app/sitemap.xml
+Sitemap: https://activegrowthgroups.com.ng/sitemap.xml

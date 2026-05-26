@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import {
+  pageUrl,
+  seoImageAlt,
+  seoImageHeight,
+  seoImageUrl,
+  seoImageWidth,
+  siteName,
+  siteUrl,
+} from '~/utils/site'
+
 const heroVideo = 'https://activegrowthgroups.my.canva.site/_assets/video/37dfe4155d1c9f51c7ded17736862c13.mp4'
 const showcaseImage = 'https://activegrowthgroups.my.canva.site/_assets/media/c82c29178950c7a13ee42581ef37bded.jpg'
 const storyOneImage = 'https://activegrowthgroups.my.canva.site/_assets/media/113747c97c567daf71b6305fb478fe7a.jpg'
@@ -133,8 +143,7 @@ const isDonateModalOpen = ref(false)
 
 useScrollReveal()
 
-const siteUrl = 'https://activegrowthgroups.com.ng'
-const pageTitle = 'Active Growth Groups | Youth Empowerment and Community Development'
+const pageTitle = `${siteName} | Youth Empowerment and Community Development`
 const pageDescription =
   'Active Growth Groups supports youth empowerment and community development through mentorship, workshops, support networks, and practical growth resources.'
 
@@ -143,16 +152,18 @@ useSeoMeta({
   description: pageDescription,
   ogTitle: pageTitle,
   ogDescription: pageDescription,
-  ogUrl: siteUrl,
+  ogUrl: pageUrl('/'),
   ogType: 'website',
-  ogSiteName: 'Active Growth Groups',
-  ogImage: `${siteUrl}favicon.svg`,
-  ogImageAlt: 'Active Growth Groups green leaf logo',
+  ogSiteName: siteName,
+  ogImage: seoImageUrl,
+  ogImageAlt: seoImageAlt,
+  ogImageWidth: seoImageWidth,
+  ogImageHeight: seoImageHeight,
   twitterTitle: pageTitle,
   twitterDescription: pageDescription,
-  twitterCard: 'summary',
-  twitterImage: `${siteUrl}favicon.svg`,
-  twitterImageAlt: 'Active Growth Groups green leaf logo',
+  twitterCard: 'summary_large_image',
+  twitterImage: seoImageUrl,
+  twitterImageAlt: seoImageAlt,
 })
 
 useHead({
@@ -162,7 +173,7 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: siteUrl,
+      href: pageUrl('/'),
     },
   ],
   script: [
@@ -174,9 +185,9 @@ useHead({
           {
             '@type': 'Organization',
             '@id': `${siteUrl}#organization`,
-            name: 'Active Growth Groups',
+            name: siteName,
             url: siteUrl,
-            logo: `${siteUrl}favicon.svg`,
+            logo: pageUrl('/favicon.svg'),
             email: 'activegrowthgroups@gmail.com',
             address: {
               '@type': 'PostalAddress',
@@ -188,7 +199,7 @@ useHead({
           {
             '@type': 'NGO',
             '@id': `${siteUrl}#ngo`,
-            name: 'Active Growth Groups',
+            name: siteName,
             url: siteUrl,
             description: pageDescription,
             areaServed: 'Nigeria',
@@ -199,7 +210,7 @@ useHead({
           {
             '@type': 'WebSite',
             '@id': `${siteUrl}#website`,
-            name: 'Active Growth Groups',
+            name: siteName,
             url: siteUrl,
             publisher: {
               '@id': `${siteUrl}#organization`,

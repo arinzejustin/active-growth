@@ -1,3 +1,13 @@
+import {
+  pageUrl,
+  seoImageAlt,
+  seoImageHeight,
+  seoImageUrl,
+  seoImageWidth,
+  siteDescription,
+  siteName,
+} from './utils/site'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   modules: ['@nuxtjs/tailwindcss'],
@@ -9,46 +19,47 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en',
       },
-      title: 'Active Growth Groups',
+      title: siteName,
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
           name: 'description',
-          content:
-            'A modern nonprofit landing page for Active Growth Groups focused on youth empowerment, community development, and practical support programs.',
+          content: siteDescription,
         },
         { name: 'format-detection', content: 'telephone=no, address=no, email=no' },
         { name: 'theme-color', content: '#2f9e44' },
         { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
         { name: 'googlebot', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
-        { name: 'author', content: 'Active Growth Groups' },
+        { name: 'author', content: siteName },
         { name: 'generator', content: 'Nuxt 3' },
-        { property: 'og:site_name', content: 'Active Growth Groups' },
+        { property: 'og:site_name', content: siteName },
         { property: 'og:locale', content: 'en_US' },
         { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: 'Active Growth Groups' },
+        { property: 'og:title', content: siteName },
         {
           property: 'og:description',
-          content:
-            'A modern nonprofit landing page for Active Growth Groups focused on youth empowerment, community development, and practical support programs.',
+          content: siteDescription,
         },
-        { property: 'og:url', content: 'https://active-growth.netlify.app/' },
-        { property: 'og:image', content: 'https://active-growth.netlify.app/favicon.svg' },
-        { property: 'og:image:type', content: 'image/svg+xml' },
-        { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: 'Active Growth Groups' },
+        { property: 'og:url', content: pageUrl('/') },
+        { property: 'og:image', content: seoImageUrl },
+        { property: 'og:image:alt', content: seoImageAlt },
+        { property: 'og:image:width', content: String(seoImageWidth) },
+        { property: 'og:image:height', content: String(seoImageHeight) },
+        { property: 'og:image:type', content: 'image/jpeg' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: siteName },
         {
           name: 'twitter:description',
-          content:
-            'A modern nonprofit landing page for Active Growth Groups focused on youth empowerment, community development, and practical support programs.',
+          content: siteDescription,
         },
-        { name: 'twitter:image', content: 'https://active-growth.netlify.app/favicon.svg' },
+        { name: 'twitter:image', content: seoImageUrl },
+        { name: 'twitter:image:alt', content: seoImageAlt },
       ],
       link: [
         {
           rel: 'canonical',
-          href: 'https://active-growth.netlify.app/',
+          href: pageUrl('/'),
         },
         {
           rel: 'icon',

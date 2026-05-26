@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import {
+  pageUrl,
+  seoImageAlt,
+  seoImageHeight,
+  seoImageUrl,
+  seoImageWidth,
+  siteName,
+} from '~/utils/site'
 
 const form = ref({
   fullName: '',
@@ -82,10 +90,36 @@ const resetForm = () => {
   submitError.value = ''
 }
 
+const pageTitle = `Volunteer Sign Up | ${siteName}`
+const pageDescription =
+  'Join Active Growth Groups as a volunteer. Contribute your time and skills to support youth empowerment and community development programs.'
+
 useSeoMeta({
-  title: 'Volunteer Sign Up | Active Growth Groups',
-  description:
-    'Join Active Growth Groups as a volunteer. Contribute your time and skills to support youth empowerment and community development programs.',
+  title: pageTitle,
+  description: pageDescription,
+  ogTitle: pageTitle,
+  ogDescription: pageDescription,
+  ogUrl: pageUrl('/volunteer'),
+  ogType: 'website',
+  ogSiteName: siteName,
+  ogImage: seoImageUrl,
+  ogImageAlt: seoImageAlt,
+  ogImageWidth: seoImageWidth,
+  ogImageHeight: seoImageHeight,
+  twitterTitle: pageTitle,
+  twitterDescription: pageDescription,
+  twitterCard: 'summary_large_image',
+  twitterImage: seoImageUrl,
+  twitterImageAlt: seoImageAlt,
+})
+
+useHead({
+  link: [
+    {
+      rel: 'canonical',
+      href: pageUrl('/volunteer'),
+    },
+  ],
 })
 
 const footerLinks = [
