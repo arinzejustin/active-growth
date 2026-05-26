@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (!body) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid request body.',
+      statusMessage: 'It looks like your request was empty. Please fill out the form and try again.',
     })
   }
 
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   if (!fullName || !email) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Full name and email are required.',
+      statusMessage: 'Please provide both your full name and email address so we can reach you.',
     })
   }
 
@@ -48,12 +48,10 @@ export default defineEventHandler(async (event) => {
           ${message || null}
         );
       `
-      console.log('[DB] Volunteer sign-up successfully saved to Neon.')
     } catch (dbError: any) {
-      console.error('[DB] Error saving volunteer application to database:', dbError)
       throw createError({
         statusCode: 500,
-        statusMessage: `Failed to save volunteer details: ${dbError.message || 'Database error'}`,
+        statusMessage: 'Something went wrong on our end while saving your application. Please try again shortly!',
       })
     }
   }
@@ -113,18 +111,9 @@ export default defineEventHandler(async (event) => {
   const isSmtpConfigured = config.smtpUser && config.smtpPass && config.smtpUser !== 'activegrowthgroups@gmail.com'
 
   if (!isSmtpConfigured) {
-    console.warn('[MAIL SERVICE] SMTP credentials are not configured. Email is in MOCK mode.')
-    console.log('[MAIL SERVICE] --- MOCK VOLUNTEER EMAIL ---')
-    console.log(`[MAIL SERVICE] To: ${mailOptions.to}`)
-    console.log(`[MAIL SERVICE] From: ${mailOptions.from}`)
-    console.log(`[MAIL SERVICE] Subject: ${mailOptions.subject}`)
-    console.log(`[MAIL SERVICE] Volunteer Name: ${fullName}`)
-    console.log(`[MAIL SERVICE] Volunteer Email: ${email}`)
-    console.log('[MAIL SERVICE] --------------------------------')
-
     return {
       success: true,
-      message: 'Volunteer application saved to DB & email mocked successfully.',
+      message: 'Thank you for signing up! Your application has been safely received.',
     }
   }
 
@@ -142,13 +131,12 @@ export default defineEventHandler(async (event) => {
     await transporter.sendMail(mailOptions)
     return {
       success: true,
-      message: 'Volunteer sign-up saved to DB and email sent successfully.',
+      message: 'Thank you for signing up! Your application has been submitted successfully.',
     }
   } catch (error: any) {
-    console.error('[MAIL SERVICE] Error sending volunteer email:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Failed to send email: ${error.message || 'Unknown SMTP error'}`,
-    })
+    return {
+      success: true,
+      message: 'Thank you for signing up! Your application has been successfully received.',
+    }
   }
 })

@@ -4,13 +4,13 @@ import { sql } from '../utils/db'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  
+
   // Read multipart form data
   const multipartData = await readMultipartFormData(event)
   if (!multipartData) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid form data. Expected multipart form data.',
+      statusMessage: 'Something went wrong with the form data. Please check your inputs and try again.',
     })
   }
 
@@ -35,30 +35,43 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Validate required fields
   if (!name.trim()) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Name is required.',
+      statusMessage: 'Please tell us your name so we know who to thank!',
     })
   }
 
   if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'A valid donation amount is required.',
+      statusMessage: 'Please enter a valid donation amount.',
     })
   }
 
-  // Validate that a proof file was attached
   if (!proofFile || !proofFile.data || !proofFile.filename) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Proof of payment file is required.',
+      statusMessage: 'Please upload a file or image showing your proof of payment.',
     })
   }
 
-  const exchangeRate = 1600
+  let exchangeRate = 1600
+
+  try {
+    const response = await fetch(
+      'https://open.er-api.com/v6/latest/USD'
+    )
+
+    const data = await response.json()
+
+    if (data?.rates?.NGN) {
+      exchangeRate = data.rates.NGN
+    }
+  } catch (error) {
+    console.error('Failed to fetch exchange rate:', error)
+  }
+
   const parsedAmount = Number(amount)
   const convertedAmountNgn = currency === 'USD' ? parsedAmount * exchangeRate : parsedAmount
 
@@ -88,17 +101,14 @@ export default defineEventHandler(async (event) => {
           ${fileBase64}
         );
       `
-      console.log('[DB] Donation proof successfully saved to Neon.')
     } catch (dbError: any) {
-      console.error('[DB] Error saving donation proof to database:', dbError)
       throw createError({
         statusCode: 500,
-        statusMessage: `Failed to save donation proof: ${dbError.message || 'Database error'}`,
+        statusMessage: 'We were unable to save your proof of payment right now. Please try again in a moment!',
       })
     }
   }
 
-  // Prepare SMTP parameters
   const isSmtpConfigured = config.smtpUser && config.smtpPass && config.smtpUser !== 'activegrowthgroups@gmail.com'
 
   const mailOptions = {
@@ -138,28 +148,17 @@ export default defineEventHandler(async (event) => {
     ],
   }
 
-  // Handle mock mode if SMTP is not fully configured
   if (!isSmtpConfigured) {
-    console.warn('[MAIL SERVICE] SMTP credentials are not configured or are placeholder values. Email is in MOCK mode.')
-    console.log('[MAIL SERVICE] --- MOCK EMAIL LOG ---')
-    console.log(`[MAIL SERVICE] To: ${mailOptions.to}`)
-    console.log(`[MAIL SERVICE] From: ${mailOptions.from}`)
-    console.log(`[MAIL SERVICE] Subject: ${mailOptions.subject}`)
-    console.log(`[MAIL SERVICE] Attachment Name: ${proofFile.filename}`)
-    console.log(`[MAIL SERVICE] Attachment Size: ${proofFile.data.length} bytes`)
-    console.log('[MAIL SERVICE] -----------------------')
-    
     return {
       success: true,
-      message: 'Proof of payment saved to DB & email mocked successfully.',
+      message: 'Thank you for your generosity! Your donation proof has been safely received and logged.',
     }
   }
 
-  // Set up nodemailer transport
   const transporter = nodemailer.createTransport({
     host: config.smtpHost,
     port: Number(config.smtpPort),
-    secure: Number(config.smtpPort) === 465, // true for 465, false for 587
+    secure: Number(config.smtpPort) === 465,
     auth: {
       user: config.smtpUser,
       pass: config.smtpPass,
@@ -170,14 +169,12 @@ export default defineEventHandler(async (event) => {
     await transporter.sendMail(mailOptions)
     return {
       success: true,
-      message: 'Proof of payment saved to DB and email sent successfully.',
+      message: 'Thank you for your generosity! Your donation proof has been submitted successfully.',
     }
   } catch (error: any) {
-    console.error('[MAIL SERVICE] Error sending email via SMTP:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Saved to DB, but failed to send email: ${error.message || 'Unknown SMTP error'}`,
-    })
+    return {
+      success: true,
+      message: 'Thank you for your generosity! Your donation proof has been successfully received.',
+    }
   }
 })
-

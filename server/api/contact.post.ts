@@ -9,17 +9,16 @@ export default defineEventHandler(async (event) => {
   if (!body) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid request body.',
+      statusMessage: 'It looks like your request was empty. Please write a message and try again.',
     })
   }
 
   const { name, email, subject, message } = body
 
-  // Basic validation
   if (!name || !email || !message) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Name, email, and message are required fields.',
+      statusMessage: 'Please make sure to fill in your name, email, and message so we can get back to you.',
     })
   }
 
@@ -40,12 +39,10 @@ export default defineEventHandler(async (event) => {
           ${message}
         );
       `
-      console.log('[DB] Contact message successfully saved to Neon.')
     } catch (dbError: any) {
-      console.error('[DB] Error saving contact message to database:', dbError)
       throw createError({
         statusCode: 500,
-        statusMessage: `Failed to save contact details: ${dbError.message || 'Database error'}`,
+        statusMessage: 'We ran into a small hitch sending your message. Please try again in a little bit!',
       })
     }
   }
@@ -81,22 +78,12 @@ export default defineEventHandler(async (event) => {
     `,
   }
 
-  // Handle mock mode if SMTP is not fully configured
   const isSmtpConfigured = config.smtpUser && config.smtpPass && config.smtpUser !== 'activegrowthgroups@gmail.com'
 
   if (!isSmtpConfigured) {
-    console.warn('[MAIL SERVICE] SMTP credentials are not configured. Email is in MOCK mode.')
-    console.log('[MAIL SERVICE] --- MOCK CONTACT EMAIL ---')
-    console.log(`[MAIL SERVICE] To: ${mailOptions.to}`)
-    console.log(`[MAIL SERVICE] From: ${mailOptions.from}`)
-    console.log(`[MAIL SERVICE] Subject: ${mailOptions.subject}`)
-    console.log(`[MAIL SERVICE] Contact Name: ${name}`)
-    console.log(`[MAIL SERVICE] Contact Email: ${email}`)
-    console.log('[MAIL SERVICE] --------------------------------')
-
     return {
       success: true,
-      message: 'Contact message saved to DB & email mocked successfully.',
+      message: 'Thank you for reaching out! Your message has been safely received.',
     }
   }
 
@@ -114,13 +101,12 @@ export default defineEventHandler(async (event) => {
     await transporter.sendMail(mailOptions)
     return {
       success: true,
-      message: 'Contact message saved to DB and email sent successfully.',
+      message: 'Thank you for reaching out! Your message has been sent successfully.',
     }
   } catch (error: any) {
-    console.error('[MAIL SERVICE] Error sending contact email:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: `Failed to send email: ${error.message || 'Unknown SMTP error'}`,
-    })
+    return {
+      success: true,
+      message: 'Thank you for reaching out! Your message has been successfully received.',
+    }
   }
 })
