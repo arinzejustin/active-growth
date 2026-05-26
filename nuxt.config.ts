@@ -85,11 +85,11 @@ export default defineNuxtConfig({
     viewer: false,
   },
   runtimeConfig: {
-    smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+    smtpHost: process.env.SMTP_HOST || '',
     smtpPort: parseInt(process.env.SMTP_PORT || '587', 10),
     smtpUser: process.env.SMTP_USER || '',
     smtpPass: process.env.SMTP_PASS || '',
-    mailTo: process.env.MAIL_TO || 'activegrowthgroups@gmail.com',
+    mailTo: process.env.MAIL_TO || '',
     public: {
       donateAccountNumber: process.env.NUXT_PUBLIC_DONATE_ACCOUNT_NUMBER || '2177174407',
       donateBankName: process.env.NUXT_PUBLIC_DONATE_BANK_NAME || 'United Bank Of Africa',

@@ -24,7 +24,7 @@ watch(
       <div
         class="surface-card flex items-center justify-between rounded-full px-4 py-3 sm:px-5"
       >
-        <a href="#top" class="flex items-center gap-3" aria-label="Active Growth Groups home">
+        <NuxtLink to="/" class="flex items-center gap-3" aria-label="Active Growth Groups home">
           <span
             class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-lg shadow-accent/15 ring-1 ring-accent/15"
           >
@@ -38,7 +38,7 @@ watch(
             <p class="font-display text-sm font-semibold tracking-[-0.03em]">Active Growth Groups</p>
             <p class="text-xs text-muted">Community development and youth empowerment</p>
           </div>
-        </a>
+        </NuxtLink>
 
         <nav class="hidden items-center gap-7 lg:flex" aria-label="Primary navigation">
           <a
@@ -89,12 +89,12 @@ watch(
               <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />
             </svg>
           </button>
-          <a
-            href="#contact"
+          <NuxtLink
+            to="/contact"
             class="action-button hidden bg-ink text-canvas sm:inline-flex dark:bg-white dark:text-slate-950"
           >
             Contact us
-          </a>
+          </NuxtLink>
           <button
             type="button"
             class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line/70 text-ink lg:hidden"

@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import nodemailer from 'nodemailer'
+import { sql } from '../utils/db'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -20,6 +21,41 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: 'Full name and email are required.',
     })
+  }
+
+  // Save to Neon Database
+  if (sql) {
+    try {
+      await sql`
+        INSERT INTO volunteers (
+          full_name, 
+          email, 
+          phone, 
+          location, 
+          interests, 
+          availability, 
+          experience, 
+          message
+        ) 
+        VALUES (
+          ${fullName}, 
+          ${email}, 
+          ${phone || null}, 
+          ${location || null}, 
+          ${interests || null}, 
+          ${availability || null}, 
+          ${experience || null}, 
+          ${message || null}
+        );
+      `
+      console.log('[DB] Volunteer sign-up successfully saved to Neon.')
+    } catch (dbError: any) {
+      console.error('[DB] Error saving volunteer application to database:', dbError)
+      throw createError({
+        statusCode: 500,
+        statusMessage: `Failed to save volunteer details: ${dbError.message || 'Database error'}`,
+      })
+    }
   }
 
   const interestsList = Array.isArray(interests) ? interests.join(', ') : interests || 'Not specified'
@@ -88,7 +124,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       success: true,
-      message: 'Volunteer sign-up received successfully (Local Dev Mode: SMTP not configured).',
+      message: 'Volunteer application saved to DB & email mocked successfully.',
     }
   }
 
@@ -106,7 +142,7 @@ export default defineEventHandler(async (event) => {
     await transporter.sendMail(mailOptions)
     return {
       success: true,
-      message: 'Volunteer sign-up submitted successfully.',
+      message: 'Volunteer sign-up saved to DB and email sent successfully.',
     }
   } catch (error: any) {
     console.error('[MAIL SERVICE] Error sending volunteer email:', error)

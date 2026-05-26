@@ -87,6 +87,14 @@ useSeoMeta({
   description:
     'Join Active Growth Groups as a volunteer. Contribute your time and skills to support youth empowerment and community development programs.',
 })
+
+const footerLinks = [
+  { label: 'Mission', href: '/#mission' },
+  { label: 'Programs', href: '/#mission' },
+  { label: 'Stories', href: '/#stories' },
+  { label: 'Get involved', href: '/#get-involved' },
+  { label: 'FAQ', href: '/#faq' },
+]
 </script>
 
 <template>
@@ -102,39 +110,10 @@ useSeoMeta({
       class="pointer-events-none absolute -bottom-20 left-1/3 h-[20rem] w-[20rem] rounded-full bg-lime/6 blur-[100px]"
     />
 
-    <!-- Nav back -->
-    <header class="sticky top-0 z-50 backdrop-blur-xl bg-canvas/80 border-b border-line/40">
-      <div class="shell flex items-center justify-between py-4">
-        <NuxtLink
-          to="/"
-          class="inline-flex items-center gap-2 text-sm font-bold text-muted transition hover:text-ink"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2.2"
-            class="h-4 w-4"
-          >
-            <line x1="19" y1="12" x2="5" y2="12" />
-            <polyline points="12 19 5 12 12 5" />
-          </svg>
-          Back to Home
-        </NuxtLink>
+    <!-- Landing navigation of main page -->
+    <LandingNav :links="footerLinks" />
 
-        <div class="flex items-center gap-2">
-          <img src="/favicon.svg" alt="Active Growth Groups" class="h-7 w-7" />
-          <span class="hidden font-display text-sm font-bold tracking-tight text-ink sm:inline">
-            Active Growth Groups
-          </span>
-        </div>
-      </div>
-    </header>
-
-    <main class="shell py-12 sm:py-16 lg:py-20">
+    <main class="shell pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-20">
       <!-- Page Header -->
       <div class="mx-auto max-w-2xl text-center">
         <span class="section-kicker">Volunteer</span>
@@ -223,7 +202,7 @@ useSeoMeta({
                   type="text"
                   required
                   placeholder="Your full name"
-                  class="vol-input"
+                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
                 />
               </div>
 
@@ -236,7 +215,7 @@ useSeoMeta({
                   type="email"
                   required
                   placeholder="you@example.com"
-                  class="vol-input"
+                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
                 />
               </div>
 
@@ -248,7 +227,7 @@ useSeoMeta({
                   v-model="form.phone"
                   type="tel"
                   placeholder="+234 800 000 0000"
-                  class="vol-input"
+                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
                 />
               </div>
 
@@ -260,7 +239,7 @@ useSeoMeta({
                   v-model="form.location"
                   type="text"
                   placeholder="City, State"
-                  class="vol-input"
+                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
                 />
               </div>
             </div>
@@ -276,33 +255,40 @@ useSeoMeta({
               <p class="text-xs text-muted">Select the areas where you'd like to contribute.</p>
             </div>
 
-            <div class="mt-5 flex flex-wrap gap-2.5">
+            <div class="mt-5 flex flex-wrap gap-3">
               <button
                 v-for="option in interestOptions"
                 :key="option.value"
                 type="button"
-                class="rounded-full border px-4 py-2 text-xs font-bold transition-all duration-200"
-                :class="
-                  form.interests.includes(option.value)
-                    ? 'border-accent/60 bg-accent/10 text-accent shadow-[0_0_12px_rgba(47,158,68,0.15)]'
-                    : 'border-line/60 bg-canvas/40 text-muted hover:border-accent/30 hover:text-ink'
-                "
+                class="chip-button flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-bold transition-all duration-300 relative overflow-hidden backdrop-blur-md cursor-pointer"
+                :class="form.interests.includes(option.value) ? 'chip-button-active border-accent/60 bg-accent/10 text-accent' : 'chip-button-inactive border-line/60 bg-canvas/40 text-muted hover:border-accent/30 hover:bg-canvas/80 hover:text-ink hover:-translate-y-0.5'"
                 @click="toggleInterest(option.value)"
               >
-                <span class="flex items-center gap-1.5">
-                  <!-- Check icon for selected -->
-                  <svg
-                    v-if="form.interests.includes(option.value)"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                    class="h-3 w-3"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
+                <span class="flex items-center gap-2 whitespace-nowrap">
+                  <!-- Custom premium SVG Icons -->
+                  <svg v-if="option.value === 'mentorship'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  <svg v-else-if="option.value === 'workshops'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <svg v-else-if="option.value === 'outreach'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  <svg v-else-if="option.value === 'events'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <svg v-else-if="option.value === 'fundraising'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <svg v-else-if="option.value === 'social-media'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 10.742l8.17 4.085m0 0a3 3 0 104.186 2.517 3 3 0 00-4.186-2.517zM19.043 5.417a3 3 0 10-4.188 2.52 3 3 0 004.188-2.52zM6 10.5a3 3 0 100 6 3 3 0 000-6z" />
+                  </svg>
+                  <svg v-else-if="option.value === 'admin'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {{ option.label }}
                 </span>
@@ -325,15 +311,25 @@ useSeoMeta({
                 v-for="opt in availabilityOptions"
                 :key="opt.value"
                 type="button"
-                class="rounded-2xl border px-4 py-3 text-xs font-bold transition-all duration-200 text-center"
-                :class="
-                  form.availability === opt.value
-                    ? 'border-accent/60 bg-accent/10 text-accent shadow-[0_0_12px_rgba(47,158,68,0.15)]'
-                    : 'border-line/60 bg-canvas/40 text-muted hover:border-accent/30 hover:text-ink'
-                "
+                class="chip-button justify-center text-center flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-bold transition-all duration-300 relative overflow-hidden backdrop-blur-md cursor-pointer"
+                :class="form.availability === opt.value ? 'chip-button-active border-accent/60 bg-accent/10 text-accent' : 'chip-button-inactive border-line/60 bg-canvas/40 text-muted hover:border-accent/30 hover:bg-canvas/80 hover:text-ink hover:-translate-y-0.5'"
                 @click="form.availability = form.availability === opt.value ? '' : opt.value"
               >
-                {{ opt.label }}
+                <span class="flex items-center gap-2 whitespace-nowrap">
+                  <svg v-if="opt.value === 'weekdays'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.022 12.022l.707.707M12 7a5 5 0 100 10 5 5 0 000-10z" />
+                  </svg>
+                  <svg v-else-if="opt.value === 'weekends'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  </svg>
+                  <svg v-else-if="opt.value === 'flexible'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                  <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {{ opt.label }}
+                </span>
               </button>
             </div>
 
@@ -351,7 +347,7 @@ useSeoMeta({
                   v-model="form.experience"
                   rows="3"
                   placeholder="Tell us about any relevant skills, experience, or background (optional)"
-                  class="vol-input resize-none"
+                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none resize-none"
                 />
               </div>
 
@@ -364,7 +360,7 @@ useSeoMeta({
                   v-model="form.message"
                   rows="3"
                   placeholder="Any additional information, questions, or notes (optional)"
-                  class="vol-input resize-none"
+                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none resize-none"
                 />
               </div>
             </div>
@@ -435,18 +431,20 @@ useSeoMeta({
       </div>
     </main>
 
-    <!-- Simple footer -->
-    <footer class="border-t border-line/40 py-6 text-center text-xs text-muted">
-      <div class="shell">
-        &copy; {{ new Date().getFullYear() }} Active Growth Groups. All rights reserved.
-      </div>
-    </footer>
+    <!-- Landing footer of main page -->
+    <LandingFooter :links="footerLinks" />
   </div>
 </template>
 
 <style scoped>
-.vol-input {
-  @apply w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none;
+/* Chip buttons */
+.chip-button {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.chip-button-active {
+  box-shadow: 0 8px 20px oklch(var(--accent) / 0.12), inset 0 0 10px oklch(var(--accent) / 0.04);
+  transform: translateY(-0.5px);
 }
 
 /* Fade transition */

@@ -34,10 +34,29 @@ const copyAccount = async () => {
 const name = ref('')
 const email = ref('')
 const amount = ref('')
+const currency = ref('NGN')
+const exchangeRate = 1600
 const file = ref<File | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const dragOver = ref(false)
 const filePreview = ref<string | null>(null)
+
+const convertedNaira = computed(() => {
+  if (!amount.value || isNaN(Number(amount.value))) return 0
+  if (currency.value === 'USD') {
+    return Number(amount.value) * exchangeRate
+  }
+  return Number(amount.value)
+})
+
+const formattedNaira = computed(() => {
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(convertedNaira.value)
+})
 
 // Submission states
 const isSubmitting = ref(false)
@@ -107,6 +126,7 @@ const resetForm = () => {
   name.value = ''
   email.value = ''
   amount.value = ''
+  currency.value = 'NGN'
   removeFile()
   submitSuccess.value = false
   submitError.value = ''
@@ -114,6 +134,14 @@ const resetForm = () => {
 
 // Submit proof
 const submitProof = async () => {
+  if (!name.value.trim()) {
+    submitError.value = 'Please enter your name.'
+    return
+  }
+  if (!amount.value || Number(amount.value) <= 0) {
+    submitError.value = 'Please enter a valid donation amount.'
+    return
+  }
   if (!file.value) {
     submitError.value = 'Please attach a proof of payment.'
     return
@@ -126,6 +154,7 @@ const submitProof = async () => {
   formData.append('name', name.value)
   formData.append('email', email.value)
   formData.append('amount', amount.value)
+  formData.append('currency', currency.value)
   formData.append('proof', file.value)
 
   try {
@@ -162,7 +191,7 @@ const submitProof = async () => {
       <Transition name="slide-up">
         <div
           v-if="isOpen"
-          class="relative w-full max-w-xl max-h-[90vh] overflow-y-auto overscroll-contain rounded-[2.2rem] border border-line/60 bg-surface/95 p-6 shadow-halo backdrop-blur-2xl transition-all duration-300 sm:p-8 md:p-9 dark:bg-slate-900/95 modal-scroll"
+          class="relative w-full max-w-xl max-h-[90vh] overflow-y-auto overscroll-contain rounded-[2.2rem] border border-line/60 bg-surface/95 p-6 shadow-halo backdrop-blur-2xl transition-all duration-300 sm:p-8 md:p-9 modal-scroll"
         >
           <!-- Close Button -->
           <button
@@ -287,12 +316,13 @@ const submitProof = async () => {
               <!-- Name & Email (2-Column Grid) -->
               <div class="grid gap-4 sm:grid-cols-2">
                 <div class="space-y-1.5">
-                  <label for="donor-name" class="text-xs font-bold text-muted">Your Name</label>
+                  <label for="donor-name" class="text-xs font-bold text-muted">Your Name *</label>
                   <input
                     id="donor-name"
                     v-model="name"
                     type="text"
-                    placeholder="Enter name (optional)"
+                    required
+                    placeholder="Enter your name"
                     class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
                   />
                 </div>
@@ -309,16 +339,55 @@ const submitProof = async () => {
                 </div>
               </div>
 
-              <!-- Amount & File Input -->
-              <div class="space-y-1.5">
-                <label for="donor-amount" class="text-xs font-bold text-muted">Amount Donated (₦)</label>
-                <input
-                  id="donor-amount"
-                  v-model="amount"
-                  type="number"
-                  placeholder="Enter amount in Naira (optional)"
-                  class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
-                />
+              <!-- Currency & Amount Selector (3-Column Grid) -->
+              <div class="grid gap-4 sm:grid-cols-3">
+                <div class="space-y-1.5 sm:col-span-1">
+                  <label for="donor-currency" class="text-xs font-bold text-muted">Currency *</label>
+                  <div class="relative">
+                    <select
+                      id="donor-currency"
+                      v-model="currency"
+                      class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink outline-none transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 appearance-none cursor-pointer"
+                    >
+                      <option value="NGN">NGN (₦)</option>
+                      <option value="USD">USD ($)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-1.5 sm:col-span-2">
+                  <label for="donor-amount" class="text-xs font-bold text-muted">
+                    Amount Donated ({{ currency === 'USD' ? '$' : '₦' }}) *
+                  </label>
+                  <input
+                    id="donor-amount"
+                    v-model="amount"
+                    type="number"
+                    required
+                    min="1"
+                    :placeholder="currency === 'USD' ? 'Enter amount in USD' : 'Enter amount in Naira'"
+                    class="w-full rounded-xl border border-line/60 bg-canvas/40 px-4 py-2.5 text-sm text-ink placeholder-muted/65 transition focus:border-accent/80 focus:ring-1 focus:ring-accent/80 outline-none"
+                  />
+                </div>
+              </div>
+
+              <!-- Dynamic Naira Conversion Display (WOW UX) -->
+              <div v-if="amount" class="mt-2 rounded-xl bg-accent/5 border border-accent/20 p-3 text-xs text-ink flex items-center justify-between animate-scale-up">
+                <div class="flex items-center gap-2">
+                  <span class="flex h-5 w-5 items-center justify-center rounded-full bg-accent/10 text-accent font-bold">₦</span>
+                  <span>
+                    <span class="font-bold text-muted">Amount to Transfer:</span>
+                    <span class="ml-1 text-sm font-extrabold text-accent">{{ formattedNaira }}</span>
+                  </span>
+                </div>
+                <span v-if="currency === 'USD'" class="text-[10px] text-muted italic">
+                  Rate: $1 = ₦{{ exchangeRate.toLocaleString() }}
+                </span>
               </div>
 
               <!-- File Attachment (Drag & Drop) -->
@@ -418,7 +487,7 @@ const submitProof = async () => {
                   <!-- Remove File Button -->
                   <button
                     type="button"
-                    class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+                    class="flex h-8 w-8 items-center justify-center rounded-full bg-line/40 text-muted hover:bg-line/80 hover:text-ink"
                     @click="removeFile"
                   >
                     <svg
