@@ -129,9 +129,11 @@ const faqItems = [
   },
 ]
 
+const isDonateModalOpen = ref(false)
+
 useScrollReveal()
 
-const siteUrl = 'https://active-growth.netlify.app/'
+const siteUrl = 'https://activegrowthgroups.com.ng'
 const pageTitle = 'Active Growth Groups | Youth Empowerment and Community Development'
 const pageDescription =
   'Active Growth Groups supports youth empowerment and community development through mentorship, workshops, support networks, and practical growth resources.'
@@ -166,7 +168,7 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@graph': [
           {
@@ -247,7 +249,7 @@ useHead({
       <section id="stories" class="scroll-mt-32">
         <LandingStories :stories="impactStories" />
       </section>
-      <LandingActions :cards="actionCards" />
+      <LandingActions :cards="actionCards" @donate-click="isDonateModalOpen = true" />
       <section id="faq" class="scroll-mt-32">
         <LandingFaq :items="faqItems" />
       </section>
@@ -255,5 +257,7 @@ useHead({
     </main>
 
     <LandingFooter :links="navLinks" />
+
+    <DonateModal :is-open="isDonateModalOpen" @close="isDonateModalOpen = false" />
   </div>
 </template>
