@@ -79,6 +79,7 @@ export default defineEventHandler(async (event) => {
   if (sql) {
     try {
       const fileBase64 = proofFile.data.toString('base64')
+      const contentType = proofFile.type || 'application/octet-stream'
       await sql`
         INSERT INTO donations (
           name, 
@@ -97,14 +98,15 @@ export default defineEventHandler(async (event) => {
           ${currency}, 
           ${convertedAmountNgn}, 
           ${proofFile.filename}, 
-          ${proofFile.type || null}, 
+          ${contentType}, 
           ${fileBase64}
         );
       `
     } catch (dbError: any) {
+      console.error('Database Error:', dbError)
       throw createError({
         statusCode: 500,
-        statusMessage: 'We were unable to save your proof of payment right now. Please try again in a moment!',
+        statusMessage: 'We were unable to process your proof of payment right now. Please try again in a moment!',
       })
     }
   }
@@ -172,6 +174,7 @@ export default defineEventHandler(async (event) => {
       message: 'Thank you for your generosity! Your donation proof has been submitted successfully.',
     }
   } catch (error: any) {
+    console.error('Email Error:', error)
     return {
       success: true,
       message: 'Thank you for your generosity! Your donation proof has been successfully received.',
