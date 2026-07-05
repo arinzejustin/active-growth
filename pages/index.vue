@@ -16,7 +16,8 @@ const storyTwoImage = 'https://activegrowthgroups.my.canva.site/_assets/media/c4
 
 const navLinks = [
   { label: 'Mission', href: '#mission' },
-  { label: 'Programs', href: '#mission' },
+  { label: 'Programs', href: '/programs' },
+  { label: "News", href: "/news" },
   { label: 'Stories', href: '#stories' },
   { label: 'Get involved', href: '#get-involved' },
   { label: 'FAQ', href: '#faq' },
