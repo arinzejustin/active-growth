@@ -14,7 +14,7 @@ const config = useRuntimeConfig()
 // Bank Details from runtime config (defaults as fallback)
 const accountNumber = computed(() => config.public.donateAccountNumber || '2177174407')
 const bankName = computed(() => config.public.donateBankName || 'United Bank Of Africa')
-const accountName = computed(() => config.public.donateAccountName || 'Ugwu Ubasinachi Ejifor')
+const accountName = computed(() => config.public.donateAccountName || 'Ugwu Ubasinachi Ejiofor')
 
 // Copy state
 const copied = ref(false)

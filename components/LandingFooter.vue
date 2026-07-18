@@ -15,14 +15,14 @@ defineProps<{
       </div>
 
       <nav class="flex flex-wrap gap-4" aria-label="Footer navigation">
-        <a
+        <NuxtLink
           v-for="link in links"
           :key="link.href"
-          :href="link.href"
+          :to="link.href"
           class="text-sm font-semibold text-muted transition hover:text-ink"
         >
           {{ link.label }}
-        </a>
+        </NuxtLink>
       </nav>
     </div>
   </footer>

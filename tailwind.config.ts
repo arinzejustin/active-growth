@@ -60,10 +60,15 @@ export default <Partial<Config>>{
           '0%, 100%': { opacity: '0.5', transform: 'scale(1)' },
           '50%': { opacity: '0.8', transform: 'scale(1.08)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         float: 'float 14s ease-in-out infinite',
         'pulse-glow': 'pulseGlow 7s ease-in-out infinite',
+        marquee: 'marquee 35s linear infinite',
       },
     },
   },
