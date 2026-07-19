@@ -20,6 +20,6 @@ export default defineEventHandler(async (event) => {
   throw createError({
     statusCode: 401,
     statusMessage: "Unauthorized",
-    message: "Incorrect Admin Password",
+    message: "Invalid User",
   });
 });
